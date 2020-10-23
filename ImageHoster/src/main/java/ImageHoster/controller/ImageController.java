@@ -90,6 +90,13 @@ public class ImageController {
         imageService.uploadImage(newImage);
         return "redirect:/images";
     }
+    //This controller method is called when the request pattern is of type '/image/{imageId}/{imageTitle}/comments' and also the incoming request is of POST type
+    //The method receives all the details of the comment to be stored in the database, and now the comment will be sent to the business logic to be persisted in the database
+    //This comment will have all the details like logged in user, image on which comment is posted
+    //After storing the comment, this method will add the comment to the image and display the image with all comments
+
+    //Get the 'tags' for the image and adds to it
+    //image, tags and comments attributes will be added to model object
     @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
     public String postComment(@PathVariable("imageId") Integer imageId,@RequestParam("comment") String text, HttpSession session, Model model) throws IOException{
         User user = (User) session.getAttribute("loggeduser");
@@ -99,6 +106,7 @@ public class ImageController {
         image.addComment(comment);
         imageService.updateImage(image);
         model.addAttribute("image",image);
+        model.addAttribute("tags", image.getTags());
         model.addAttribute("comments",commentService.getCommenstByImageId(imageId));
         return "images/image";
     }

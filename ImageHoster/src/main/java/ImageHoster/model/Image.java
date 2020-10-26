@@ -76,7 +76,7 @@ public class Image {
         this.date = date;
     }
 
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         comments.add(comment);
     }
 
@@ -132,10 +132,10 @@ public class Image {
         return tags;
     }
 
-    public List<Comment> getComments()
-    {
+    public List<Comment> getComments() {
         return comments;
     }
+
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }

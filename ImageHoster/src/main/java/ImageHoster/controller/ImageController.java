@@ -55,7 +55,7 @@ public class ImageController {
         Image image = imageService.getImage(id);
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
-        model.addAttribute("comments",commentService.getCommenstByImageId(id));
+        model.addAttribute("comments", commentService.getCommenstByImageId(id));
         return "images/image";
     }
 
@@ -98,16 +98,16 @@ public class ImageController {
     //Get the 'tags' for the image and adds to it
     //image, tags and comments attributes will be added to model object
     @RequestMapping(value = "/image/{imageId}/{imageTitle}/comments", method = RequestMethod.POST)
-    public String postComment(@PathVariable("imageId") Integer imageId,@RequestParam("comment") String text, HttpSession session, Model model) throws IOException{
+    public String postComment(@PathVariable("imageId") Integer imageId, @RequestParam("comment") String text, HttpSession session, Model model) throws IOException {
         User user = (User) session.getAttribute("loggeduser");
         Image image = imageService.getImage(imageId);
-        Comment comment = new Comment(text,new Date(),user,image);
+        Comment comment = new Comment(text, new Date(), user, image);
         commentService.createComment(comment);
         image.addComment(comment);
         imageService.updateImage(image);
-        model.addAttribute("image",image);
+        model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
-        model.addAttribute("comments",commentService.getCommenstByImageId(imageId));
+        model.addAttribute("comments", commentService.getCommenstByImageId(imageId));
         return "images/image";
     }
     //This controller method is called when the request pattern is of type 'editImage'
@@ -125,14 +125,14 @@ public class ImageController {
         String error = "Only the owner of the image can edit the image";
         model.addAttribute("image", image);
         model.addAttribute("tags", tags);
-        if(loggeduser.getUsername().equalsIgnoreCase(imageUser.getUsername())) {
+        if (loggeduser.getUsername().equalsIgnoreCase(imageUser.getUsername())) {
             return "images/edit";
-        }else{
+        } else {
             model.addAttribute("editError", error);
-            model.addAttribute("tags",image.getTags());
-            model.addAttribute("comments",commentService.getCommenstByImageId(imageId));
+            model.addAttribute("tags", image.getTags());
+            model.addAttribute("comments", commentService.getCommenstByImageId(imageId));
             return "images/image";
-    }
+        }
     }
 
     //This controller method is called when the request pattern is of type 'images/edit' and also the incoming request is of PUT type
@@ -180,21 +180,20 @@ public class ImageController {
         User loggeduser = (User) session.getAttribute("loggeduser");
         User imageUser = image.getUser();
 
-        if(loggeduser.getUsername().equalsIgnoreCase(imageUser.getUsername())){
+        if (loggeduser.getUsername().equalsIgnoreCase(imageUser.getUsername())) {
             imageService.deleteImage(imageId);
             return "redirect:/images";
-        }
-        else {
-           model.addAttribute("image", image);
-           model.addAttribute("tags", image.getTags());
-           String error = "Only the owner of the image can delete the image";
-           model.addAttribute("deleteError", error);
-            model.addAttribute("comments",commentService.getCommenstByImageId(imageId));
-           return "images/image";
+        } else {
+            model.addAttribute("image", image);
+            model.addAttribute("tags", image.getTags());
+            String error = "Only the owner of the image can delete the image";
+            model.addAttribute("deleteError", error);
+            model.addAttribute("comments", commentService.getCommenstByImageId(imageId));
+            return "images/image";
 
         }
 
-        }
+    }
 
 
     //This method converts the image to Base64 format
